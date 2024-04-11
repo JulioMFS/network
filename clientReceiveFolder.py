@@ -15,8 +15,11 @@ def main():
 
         # Get folder name from user
         #folder_name = input("Enter folder name to download: ")
-        folder_name = b'/media/julio/TOSHIBA EXT/C_Drive_23_03_2015/Htc/Storage Card/IMG-20120114-00031.jpg'
-
+        #folder_name = b'/media/julio/TOSHIBA EXT/C_Drive_23_03_2015/Htc/Storage Card/IMG-20120114-00031.jpg'
+        #folder_name = '\\media\\julio\\TOSHIBAEXT\\C_Drive_23_03_2015\\Htc\\StorageCard\\'
+        #folder_name = 'media/julio/TOSHIBA EXT/C_Drive_23_03_2015/Htc/Storage Card$'
+        #folder_name = "/media/julio/TOSHIBA EXT/C_Drive_23_03_2015/Htc"
+        folder_name = "/media/julio/TOSHIBA EXT/C_Drive_23_03_2015/"
         # Send folder name to server
         client_socket.sendall(folder_name.encode())
 
@@ -25,9 +28,10 @@ def main():
 
         if response == "OK":
             num_files = int(client_socket.recv(BUFFER_SIZE).decode())
-
+            print(f'Found {num_files} in {folder_name}')
             # Create directory to store files if it doesn't exist
             if not os.path.exists(folder_name):
+                print(f"\tPath: {folder_name} doesn't exist ")
                 os.makedirs(folder_name)
 
             # Receive files from server
@@ -38,6 +42,7 @@ def main():
                         data = client_socket.recv(BUFFER_SIZE)
                         if not data:
                             break
+                        print(f'\tWriting {os.path.join(folder_name, filename)}')
                         file.write(data)
 
             print("Folder downloaded successfully")
